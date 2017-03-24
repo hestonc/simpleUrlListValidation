@@ -23,18 +23,18 @@ function validateUrls(urls, done) {
     }
 
     // check to see if it's maformed.
-    for (const argUrg of urls) {
-        let whatsWrong =  isUrlMalformed(argUrg);
+    for (const argUrl of urls) {
+        let whatsWrong =  isUrlMalformed(argUrl);
 
         if (!whatsWrong) {
 
             // check to see if it returns success.
-            httpUrlChecks.push(doesUrlReturnSuccess(argUrg));
+            httpUrlChecks.push(doesUrlReturnSuccess(argUrl));
 
         }
         else {
             const badUrl = {
-                url: argUrg,
+                url: argUrl,
                 reason: whatsWrong
             };
             badUrls.push(badUrl);
@@ -92,12 +92,12 @@ function parseReason(reason) {
  * @param url
  * @returns a string with why the url failed
  */
-function isUrlMalformed(argUrg) {
+function isUrlMalformed(argUrl) {
     let reason; // undefined
     // first check with valid-url upfront
-    if (validUrl.isWebUri(argUrg) === undefined) {
+    if (validUrl.isWebUri(argUrl) === undefined) {
         // try parsing for an error
-        reason = whyIsUrlMalformed(argUrg);
+        reason = whyIsUrlMalformed(argUrl);
     }
     return reason;
 }

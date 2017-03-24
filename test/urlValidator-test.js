@@ -5,7 +5,7 @@ const should = require('should'),
 describe('doesUrlReturnSuccess', function(){
     it('should return successfully with a valid URL', function() {
         let goodUrl = 'http://google.com';
-        
+
         return urlValidator.doesUrlReturnSuccess(goodUrl).should.be.fulfilled();
     });
 
@@ -44,11 +44,11 @@ describe ('validateUrls', function(){
     it('should return 5 urls if passed 1 good url and 5 bad urls', function(done) {
         let urls = [
             'http://google.com',
-            'http://not.a.valid.url.foo',
             'http:notgood.foo',
-            'http:// fo .com',
+            'http:://fo.com',
             'http//notfoo.com',
-            'https://qa-gateway-esq.herokuapp.com/api/v1/systemmonitors'
+            'https://qa-gateway-esq.herokuapp.com/api/v1/systemmonitors',
+            'http://heston:password@google.com/not?my=problem#yes'
         ];
 
         urlValidator.validateUrls(urls, function(badUrls){
