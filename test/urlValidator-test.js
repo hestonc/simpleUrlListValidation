@@ -41,18 +41,20 @@ describe ('validateUrls', function(){
         })
     });
 
-    it('should return 2 url if passed 1 good url and 2 bad urls', function(done) {
+    it('should return 5 urls if passed 1 good url and 5 bad urls', function(done) {
         let urls = [
             'http://google.com',
             'http://not.a.valid.url.foo',
             'http:notgood.foo',
             'http:// fo .com',
-            'http//notfoo.com'
+            'http//notfoo.com',
+            'https://qa-gateway-esq.herokuapp.com/api/v1/systemmonitors'
         ];
 
         urlValidator.validateUrls(urls, function(badUrls){
             should.exist(badUrls);
-            (badUrls.length).should.equal(4);
+            console.log(badUrls);
+            (badUrls.length).should.equal(5);
 
             done();
         })

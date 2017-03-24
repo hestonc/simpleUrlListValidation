@@ -47,21 +47,19 @@ function validateUrls(urls, done) {
             .then(function (results) {
                 for (const result of results) {
                     if (result.state == 'rejected') {
-                        // console.log(`rejected ${result.reason.options.uri}`);
-                        // console.log(`cause ${result.reason.message}`);
                         const badUrl = {
                             url: result.reason.options.uri,
-                            reason: result.reason.message
+                            reason: parseReason(result.reason)
                         };
                         badUrls.push(badUrl);
                     }
                     else {
-                        console.log("passed");
+                        // console.log("passed");
                     }
                 }
             })
             .catch(function (err) {
-                console.log('error!', err);
+                console.error(err);
             })
             .done(function () {
                 done(badUrls);
@@ -70,6 +68,23 @@ function validateUrls(urls, done) {
     else {
         done(badUrls);
     }
+}
+
+
+/**
+ * Parses the reason and returns a hopefully better error message
+ */
+function parseReason(reason) {
+    let message = reason.message;
+    if (reason.name === 'RequestError') {
+        if (reason.cause.code == 'ENOTFOUND') {
+            message = 'DNS address could not be found';
+        }
+    }
+    else if (reason.name === 'StatusCodeError') {
+        message = `URL returned ${reason.statusCode}`;
+    }
+    return message;
 }
 
 /**
@@ -84,21 +99,30 @@ function isUrlMalformed(argUrg) {
         // try parsing for an error
         reason = whyIsUrlMalformed(argUrg);
     }
-    // console.log(`${argUrg} is checked and returns ${reason}`);
     return reason;
 }
 
+/**
+ * will parse the url and look to see why it is not well formed,
+ * hopefully returning a reason why.  Currently doesn't do much 
+ * as I ran out of time.
+ * @param argUrl
+ * @returns {string}
+ */
 function whyIsUrlMalformed(argUrl) {
-    let reason = 'url is not valid';
+    let reason = 'URL is not valid';
 
     // does it have a valid scheme?
-    let urlObj =  url.parse(argUrl, true, true);
-    console.log(urlObj)
+    // let urlObj =  url.parse(argUrl, true, true);
 
     return reason;
 }
 
-// exported for testing purposes only
+/**
+ * Makes an http get call to the url passed in, returns 
+ * a promise.
+ * @param argUrl  url to hit
+ */
 function doesUrlReturnSuccess(argUrl) {
     var options = {
         method: 'GET',
@@ -109,7 +133,10 @@ function doesUrlReturnSuccess(argUrl) {
 }
 
 module.exports = {
+    // exposed for testing purposes
     doesUrlReturnSuccess: doesUrlReturnSuccess,
     isUrlMalformed: isUrlMalformed,
+    
+    
     validateUrls: validateUrls
 };
