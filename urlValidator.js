@@ -3,6 +3,7 @@
 const q = require('q'),
     request = require('request-promise'),
     url = require('url'),
+    validator = require('validator'),
     validUrl = require('valid-url');
 
 
@@ -95,7 +96,8 @@ function parseReason(reason) {
 function isUrlMalformed(argUrl) {
     let reason; // undefined
     // first check with valid-url upfront
-    if (validUrl.isWebUri(argUrl) === undefined) {
+    if (validUrl.isWebUri(argUrl) === undefined ||
+    !validator.isURL(argUrl, ['http', 'https'], true, true)) {
         // try parsing for an error
         reason = whyIsUrlMalformed(argUrl);
     }
